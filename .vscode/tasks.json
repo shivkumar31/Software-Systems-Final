@@ -1,0 +1,36 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build with goson.jar",
+      "type": "shell",
+      "command": "javac",
+      "args": [
+        "-cp",
+        "${workspaceFolder}/goson.jar",
+        "-d",
+        "${workspaceFolder}/bin",
+        "${workspaceFolder}/src/**/*.java"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$javac"]
+    },
+    {
+      "label": "Run Main with goson.jar",
+      "type": "shell",
+      "command": "java",
+      "args": [
+        "-cp",
+        "${workspaceFolder}/bin;${workspaceFolder}/goson.jar",
+        "src.Main"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    }
+  ]
+}

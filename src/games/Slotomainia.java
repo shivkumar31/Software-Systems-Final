@@ -1,11 +1,16 @@
+package src.games;
+
 import java.util.Scanner;
+
+import src.account.Account;
+import src.account.AccountManager;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
 public class Slotomainia extends Game {
 
-    double tempCurrency = 100;
     double betAmt;
     Scanner sc = new Scanner(System.in);
     Random rand = new Random();
@@ -14,6 +19,10 @@ public class Slotomainia extends Game {
     String continuePlaying;
 
     String[] symbols = { "WILD", "SCATTER", "SPADES", "DIAMONDS", "CLOVERS", "HEARTS" };
+
+    public Slotomainia(Account account, AccountManager accountManager) {
+        super(account, accountManager);
+    }
 
     @Override
     public void run() {
@@ -28,7 +37,7 @@ public class Slotomainia extends Game {
                 "    - A WILD symbol can be a placeholder for any symbol (EX: HEART, WILD, HEART will be a jackpot)\n"
                 +
                 "\n" +
-                "    - If at least one SCATTER card is in a slot, 1/3rd of the money betted is returned. SCATTERS ARE NOT STACKABLE\n"
+                "    - If at least one SCATTER card is in a slot, You will get the money you betted\n"
                 +
                 "\n" +
                 "WAYS TO LOSE\n" +
@@ -41,25 +50,29 @@ public class Slotomainia extends Game {
 
         while (true) {
             Arrays.setAll(slot, i -> slot[i] = rand.nextInt(5));
-            if (tempCurrency == 0) {
+            if (account.getBalance() == 0) {
                 System.out.println(
                         "\nIt seems you are out of money. Don't worry! Since this is a virtual game, we'll give you a free $100!");
-                tempCurrency += 100;
+                account.setBalance(100);
             } else {
-                System.out.println("\nCurrent Currency: $" + String.valueOf(tempCurrency));
+                System.out.println("\nCurrent Currency: $" + String.valueOf(account.getBalance()));
             }
-
+            System.out.println("\n---------------------------------------------");
+            System.out.println("|                 SLOTOMANIA                |");
+            System.out.println("---------------------------------------------");
+            System.out.println("| Current Balance: $" + String.format("%-20s", account.getBalance()) + " |");
+            System.out.println("---------------------------------------------");
             System.out.print("\nHow much Money would you like to bet (or type 'q' to quit)? ");
             input = sc.nextLine().trim();
             if (input.equalsIgnoreCase("q")) {
                 System.out.println("Understandable. Have a great day!");
-                break;
+                return;
             }
 
             try {
                 betAmt = Double.parseDouble(input);
 
-                if (betAmt > tempCurrency || betAmt < 0.01) {
+                if (betAmt > account.getBalance() || betAmt < 0.01) {
                     throw new RuntimeException();
                 }
             } catch (NumberFormatException e) {
@@ -74,19 +87,21 @@ public class Slotomainia extends Game {
             System.out
                     .println("\nResults:\n| " + symbols[slot[0]] + " | "
                             + symbols[slot[1]]
-                            + " | " + symbols[slot[2]]);
+                            + " | " + symbols[slot[2]] + " |");
 
             if ((slot[0] == slot[1] && slot[1] == slot[2])
                     || (checkDuplicate(slot) && countInstances(slot, 0) == 1)) {
                 System.out.println("\nJACKPOT!!! x4 The reward payout");
-                tempCurrency += betAmt * 4;
+                account.setBalance(account.getBalance() + (betAmt * 4));
             } else if (slot[0] == 1 || slot[1] == 1 || slot[2] == 1) {
                 System.out.println("SCATTER! You will recieve all the money you betted!");
-                tempCurrency += betAmt;
+                account.setBalance(account.getBalance() + betAmt);
             } else {
                 System.out.println("You lost :( . Since no combo was hit, you lose out on the money you wagered)");
-                tempCurrency -= betAmt;
+                account.setBalance(account.getBalance() - betAmt);
             }
+
+            accountManager.saveAccounts();
 
             System.out
                     .print("\nWould you like to continue playing (type \'y\' to continue, or press any key to quit)? ");
@@ -96,7 +111,8 @@ public class Slotomainia extends Game {
             if (continuePlaying.equalsIgnoreCase("y")) {
                 continue;
             } else {
-                System.out.println("Understandable. Have a great day!");
+                System.out
+                        .println("\nThanks for playing! Your balance is now: " + String.valueOf(account.getBalance()));
                 break;
             }
         }
