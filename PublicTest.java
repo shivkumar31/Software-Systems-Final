@@ -29,6 +29,7 @@ public class PublicTest {
 
 
         System.out.println("Enter 1. To play Coin Flip");
+        System.out.println("Enter 2. to play Aviator");
         System.out.print(">> ");
         char game = sc.next().charAt(0);
 
@@ -39,16 +40,26 @@ public class PublicTest {
         bal.setDeposit(deposit);
         
 
-        if (game == '1') {
-            System.out.print("Enter 'H' for heads or 'T' for tails >> ");
-            char choice = sc.next().charAt(0);
-
-            CoinFlip coin = new CoinFlip(choice);
-            // coin.accessVariables(bal);
-            coin.flipCoin(bal);
-        }
-        else{
-            System.out.println("Invalid game selection");
+        switch (game) {
+            case '1':
+                System.out.println("Test your luck in this classic Coin Flip Game! Each round, the player chooses either Heads or Tails. The coin is flipped, and if your guess matches the result, you win! It’s quick, easy, and all about trusting your instincts. How many in a row can you get right?");
+                System.out.print("Enter 'H' for heads or 'T' for tails >> ");
+                char choice = sc.next().charAt(0);
+                CoinFlip coin = new CoinFlip(choice);
+                // coin.accessVariables(bal);
+                coin.flipCoin(bal);
+                break;
+            case '2':
+                System.out.println("In this game, a random multiplier is secretly generated each round. The player’s goal is to guess a number with a decimal number that is less than or equal to the hidden multiplier. If the guess is equal to or below the multiplier, the player wins and their deposit is multiplied by their guess. But if the guess is too high, they lose the round. It’s a game of precision and intuition—how close can you get without going over? ");
+                System.out.print("So, what's your guess? >> ");
+                double guess = sc.nextDouble();
+                sc.nextLine();
+                Aviator plane = new Aviator(guess);
+                plane.plane(bal);
+                break;
+            default:
+                System.out.println("Invalid game selection");
+                break;
         }
 
 

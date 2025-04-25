@@ -36,6 +36,7 @@ public class CoinFlip {
         // PublicTest bal = new PublicTest(); // accessing variables
         double deposit = bal.getDeposit(); // accessing deposit value
         double balance = bal.getBalance(); // accessing balance value
+        //Creating variables for readability and simplicity
         double newBalance;
         double newDeposit;
         if (choice == 'H' || choice == 'h') {
