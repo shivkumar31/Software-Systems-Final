@@ -17,7 +17,12 @@ public class PublicTest {
         return deposit;
     }
     public void setDeposit(double newDeposit){
-        this.deposit = newDeposit;
+         if (deposit > 0) {
+              this.deposit = deposit;
+         } else {
+              System.out.println("Deposit must be a positive number. Setting deposit to 0.");
+              this.deposit = 0.0;
+         }
     }
     public void setBalance(double newBalance){
         this.balance = newBalance;
@@ -28,12 +33,10 @@ public class PublicTest {
         PublicTest bal = new PublicTest(); //declare main class
 
 
-        System.out.println("Enter 1. To play Coin Flip");
-        System.out.print(">> ");
+        System.out.println("Enter 1. To play Coin Flip >>");
         char game = sc.next().charAt(0);
 
-        System.out.println("How much would you like to deposit it into this game");
-        System.out.print(">> ");
+        System.out.println("How much would you like to deposit it into this game ? >>");
         double deposit = sc.nextDouble();
         sc.nextLine();
         bal.setDeposit(deposit);
@@ -48,7 +51,7 @@ public class PublicTest {
             coin.flipCoin(bal);
         }
         else{
-            System.out.println("Invalid game selection");
+            System.out.println("Invalid game selection. Please try again");
         }
 
 
